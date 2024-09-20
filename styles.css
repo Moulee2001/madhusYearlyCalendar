@@ -1,0 +1,678 @@
+body {
+    font-family: "Open Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+    max-height: 100vh;
+    /* overflow: hidden; */
+}
+
+.container {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    height: auto;
+}
+
+.sel {
+    appearance: none;
+    outline: 10px red;
+    border: 0;
+    box-shadow: none;
+    flex: 1;
+    padding: 0 1em;
+    color: #fff;
+    background-color: var(--darkgray);
+    background-image: none;
+    cursor: pointer;
+}
+
+.sel::-ms-expand {
+    display: none;
+}
+
+.select {
+    /* position: relative; */
+    display: inline-flex;
+    width: 8em;
+    height: 2em;
+    border-radius: .25em;
+    overflow: hidden;
+    border: 1px solid black;
+}
+
+.opt {
+    background-color: rgb(245, 245, 245);
+    font-size: 19px;
+    color: black;
+}
+
+.select::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5em;
+    background-color: #515151a6;
+    color: #000000;
+    transition: .25s all ease;
+    pointer-events: none;
+}
+
+.select:hover::before {
+    color: #15008a;
+}
+
+.select:hover::after {
+    color: #ffffff;
+}
+
+.table-div {
+    padding: 0 20px;
+}
+
+table {
+    border: 1px solid #000000;
+    border-collapse: collapse;
+    margin: auto;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+}
+
+table tr {
+    background-color: #f8f8f8;
+    border: 1px solid #000000;
+    padding: .35em;
+    height: 50px;
+}
+
+table th,
+table td {
+    border: 1px solid #000000;
+    /* padding: 15px 0px; */
+    text-align: center;
+    font-size: .75em;
+}
+
+.label {
+    width: 50px;
+}
+
+table th {
+    border: 1px solid #000000;
+    font-size: 12px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        border: 0;
+    }
+
+    table caption {
+        font-size: 1.3em;
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+    }
+
+    table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
+}
+
+.calendar-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 8px;
+    background-color: #9d90df;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 0 !important;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+}
+
+.year-select-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+}
+
+.bulk-select-checkbox {
+    width: 19px;
+    height: 19px;
+    border: 2px solid #fff;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+#venue,
+#suites,
+#booking-status,
+#booking-date,
+#booking-sales-opportunity,
+#booking-sales-person,
+#booking-Enquiry-Reference,
+#booking-contact,
+#booking-mandatory-bedrooms,
+#booking-price-per-bedroom,
+#booking-notes {
+    padding: 4px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 200px;
+    box-sizing: border-box;
+}
+
+.booking-notes {
+    resize: none;
+    border: none;
+}
+
+.booking-notes:active {
+    border: none;
+}
+
+textarea:focus,
+input:focus {
+    outline: none;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+
+    th,
+    td {
+        padding: 5px;
+    }
+
+    .cell_values {
+        height: 25px;
+        width: 25px;
+    }
+
+    .month-header {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    th,
+    td {
+        padding: 3px;
+        font-size: 12px;
+    }
+
+    .cell_values {
+        height: 20px;
+        width: 20px;
+    }
+
+    .month-header {
+        font-size: 12px;
+    }
+
+    select,
+    input[type="text"] {
+        font-size: 14px;
+    }
+}
+
+
+/* Form styling */
+#booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 15px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+label {
+    flex: 1;
+    font-weight: bold;
+    text-align: left;
+    padding-right: 10px;
+}
+
+
+/* .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+} */
+
+/* .modal-button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.2s ease, box-shadow 0.3s;
+} */
+
+/* .modal-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+} */
+
+/* @media (max-width: 600px) {
+    .modal-content {
+        width: 90%;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    label {
+        text-align: left;
+        padding-right: 0;
+    }
+
+    label,
+    select,
+    input[type="text"] {
+        width: 100%;
+    }
+} */
+
+.weekend {
+    background-color: #d2dae2;
+}
+
+.legends-color-container {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    height: auto;
+    align-items: center;
+    justify-content: start;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 10px;
+}
+
+/* style for add, update and delete button */
+.click-btn {
+    display: flex;
+    width: 120px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem;
+    line-height: 35px;
+    border: 1px solid;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
+    color: #000;
+    text-decoration: none;
+    transition: all 0.35s;
+    box-sizing: border-box;
+}
+
+/* style for add button */
+/* .btn-style510 {
+    position: relative;
+    background-color: #1bbc9b;
+    border-color: #1bbc9b;
+    color: #fff;
+    overflow: hidden;
+}
+
+.btn-style510::before,
+.btn-style510::after {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-100px) skewX(-15deg);
+    content: "";
+}
+
+.btn-style510::before {
+    width: 60px;
+    background: #28B463;
+    filter: blur(30px);
+    opacity: 0.5;
+}
+
+.btn-style510::after {
+    width: 30px;
+    left: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    filter: blur(5px);
+}
+
+.btn-style510:hover {
+    background-color: #28B463;
+    border-color: #28B463;
+}
+
+.btn-style510:hover::before {
+    opacity: 1;
+}
+
+.btn-style510:hover::before,
+.btn-style510:hover::after {
+    transform: translateX(300px) skewX(-15deg);
+    transition: all 0.9s ease;
+}
+
+/* style for update button */
+/* .btn-style511 {
+    position: relative;
+    background-color: #3838ae;
+    border-color: #3838ae;
+    color: #fff;
+    overflow: hidden;
+}
+
+.btn-style511::before,
+.btn-style511::after {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-100px) skewX(-15deg);
+    content: "";
+}
+
+.btn-style511::before {
+    width: 60px;
+    background: #5051f9;
+    filter: blur(30px);
+    opacity: 0.5;
+}
+
+.btn-style511::after {
+    width: 30px;
+    left: 30px;
+    background: #5051f9;
+    filter: blur(5px);
+}
+
+.btn-style511:hover {
+    background-color: #5051f9;
+    border-color: #5051f9;
+}
+
+.btn-style511:hover::before {
+    opacity: 1;
+}
+
+.btn-style511:hover::before,
+.btn-style511:hover::after {
+    transform: translateX(300px) skewX(-15deg);
+    transition: all 0.9s ease;
+} */
+
+/* style for delete button */
+/* .btn-style512 {
+    position: relative;
+    background-color: #333333;
+    border-color: #333333;
+    color: #fff;
+    overflow: hidden;
+}
+
+.btn-style512::before,
+.btn-style512::after {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-100px) skewX(-15deg);
+    content: "";
+}
+
+.btn-style512::before {
+    width: 60px;
+    background: #555555;
+    filter: blur(30px);
+    opacity: 0.5;
+}
+
+.btn-style512::after {
+    width: 30px;
+    left: 30px;
+    background: #555555;
+    filter: blur(5px);
+}
+
+.btn-style512:hover {
+    background-color: #555555;
+    border-color: #555555;
+}
+
+.btn-style512:hover::before {
+    opacity: 1;
+}
+
+.btn-style512:hover::before,
+.btn-style512:hover::after {
+    transform: translateX(300px) skewX(-15deg);
+    transition: all 0.9s ease;
+} */
+
+.dropdown-year-select {
+    padding: 10px 14px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.dropdown-year-select:focus {
+    outline: none;
+}
+
+.filter-status-select {
+    padding: 10px 5px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.filter-status-select:focus {
+    outline: none;
+}
+
+.calendar-header label {
+    font-size: 16px;
+}
+
+/* .cell_values .tooltip {
+    background: #115ea1 !important;
+    border-radius: 6px !important;
+    color: #EDEFF0 !important;
+    font-size: 13px !important;
+    padding: 10px !important;
+    position: absolute !important;
+    white-space: pre-wrap !important;
+    z-index: 100 !important;
+    max-width: 80vw !important;
+} */
+
+.tooltip-inner {
+    background-color: #3d4151 !important;
+    color: #fff !important;
+    padding: 10px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    max-width: 400px !important;
+    max-height: 500px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    transition: all .55s cubic-bezier(.84, -0.18, .31, 1.26) !important;
+    text-align: justify;
+}
+
+.tooltip-item {
+    display: flex;
+    align-items: left;
+}
+
+.tooltip-item strong {
+    text-align: left;
+    padding-right: 5px;
+}
+
+.note-mark {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border-top: 16px solid green;
+    border-left: 16px solid transparent;
+    pointer-events: none;
+}
+
+.note-mark-bottom-right {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    border-bottom: 16px solid green;
+    border-left: 16px solid transparent;
+    pointer-events: none;
+}
+
+.note-mark-bottom-left {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    border-bottom: 16px solid green;
+    border-right: 16px solid transparent;
+    pointer-events: none;
+}
+
+.note-mark-top-left {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-top: 16px solid green;
+    border-right: 16px solid transparent;
+    pointer-events: none;
+}
+
+.cell_values.selected {
+    background-color: orange;
+}
+
+.cell_values.weekend.selected {
+    background-color: orange;
+}
+
+.cell_values {
+    cursor: pointer;
+    user-select: none;
+    position: relative !important;
+}
+
+.updateselected {
+    background-color: green;
+}
+
+#updateRec-buttons,
+#addRec-button {
+    padding-top: 10px;
+}
+
+.form-control {
+    appearance: auto !important;
+}
+
+.select2-container--default .select2-selection--single {
+    height: calc(1.90rem + 2px);
+    padding: 4px 0px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #fff;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+    font-size: 14px;
+    width: 290px;
+}
+
+.select2-container--default .select2-selection--single:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #000;
+    font-size: 14px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: calc(2.05rem + 2px);
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.select2-results__option {
+    padding: 3px;
+    font-size: 14px;
+}
