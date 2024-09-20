@@ -26,6 +26,8 @@ $(document).ready(function () {
     BookingRecords_Func();
     EmailTemplate_List_Func();
     SalesOppRecords_Func();
+    fetchRagamamaDates();
+    fetchMadhuDates();
     if (FinalBookinglist.length == 0) {
       fetchRecordsFunc("").then(ReturnVal => {
         // console.log("ReturnVal New:", ReturnVal);
@@ -1272,4 +1274,62 @@ $(document).ready(function () {
   });
 
 });
+
+// Fetch Ragamama dates
+async function fetchRagamamaDates() {
+  try {
+    let criteria = `Booking_Status.ID == 196576000000012035`;
+    var config = { 
+        appName: "bookings",
+        reportName: "Booking_Report", 
+        criteria: criteria,
+        page: 1,
+        pageSize: 10
+    };
+
+    const response = await ZOHO.CREATOR.API.getAllRecords(config);
+    var ragamamaDropdown = document.getElementById('ragamama-date');
+    ragamamaDropdown.innerHTML = ''; // Clear existing options
+
+    var recordArr = response.data;
+    recordArr.forEach(function(record) {
+        var option = document.createElement('option');
+        option.value = record.Date_of_Booking; // Assuming 'Date' is the field name
+        option.textContent = record.Date_of_Booking;
+        ragamamaDropdown.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Error fetching Ragamama dates' );
+    // alert('Failed to fetch Ragamama dates. Please try again later.');
+  }
+}
+// Fetch Madhu's dates
+async function fetchMadhuDates() {
+  try {
+    let criteria2 = `Booking_Status.ID == 196576000000012039`;
+    var config = { 
+        appName: "bookings",
+        reportName: "Booking_Report", 
+        criteria: criteria2,
+        page: 1,
+        pageSize: 10
+    };
+
+    const response = await ZOHO.CREATOR.API.getAllRecords(config);
+    var madhuDropdown = document.getElementById('madhu-date');
+    madhuDropdown.innerHTML = ''; // Clear existing options
+
+    var recordArr = response.data;
+    // console.log("recordArr",recordArr)
+    recordArr.forEach(function(record) {
+        var option = document.createElement('option');
+        option.value = record.Date_of_Booking; // Assuming 'Date' is the field name
+        option.textContent = record.Date_of_Booking;
+        madhuDropdown.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Error fetching Madhu dates');
+    // alert('Failed to fetch Madhu dates. Please try again later.');
+  }
+}
 

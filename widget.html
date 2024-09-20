@@ -255,6 +255,41 @@
 </head>
 
 <body>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      
+      <table class="booking-table">
+          <tbody>
+              <tr>
+                  <td class="table-cell">
+                      <label for="ragamama-date">Ragamama Date:</label>
+                      
+                  </td>
+                  <td>
+                    <select class="dropdown" id="ragamama-date"></select>
+                  </td>
+
+              </tr>
+              <tr>
+                <td class="table-cell">
+                  <label for="madhu-date">Madhu's Provisional Date:</label>
+               
+              </td>
+              <td>
+                <select class="dropdown" id="madhu-date"></select>
+              </td>
+              </tr>
+              <tr>
+                  <td class="table-cell" colspan="2" style="text-align: center;">
+                      <button class="swap-button" id="confirm-swap">Confirm Swap</button>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+</div>
 
   <div class="row mb-0 mt-2" style="text-align: center;">
     <div class="col-6 venueheader" style="font-size: 15px;height: 50px;">
@@ -281,6 +316,10 @@
       <select class="filter-status-select" id="filter-dropdown" style="width: 200px;">
         <option value="0" selected>All Status</option>
       </select>
+    </span>
+    <button class="swap-button" id="swap-btn">SWAP DATE</button>
+    <span>
+
     </span>
   </div>
   <div class="table-div">
@@ -529,5 +568,60 @@
   });
 
 </script>
+<script>
+  // Initialize Zoho Creator
+  // ZOHO.embeddedApp.init().then(function(response) {
+  //     fetchRagamamaDates();
+  //     fetchMadhuDates();
+  // });
 
+  // Fetch Ragamama dates
+  
+
+  // Get modal element
+  const modal = document.getElementById('myModal');
+  const swapBtn = document.getElementById('swap-btn');
+  const closeBtn = document.getElementsByClassName('close')[0];
+  const confirmSwapBtn = document.getElementById('confirm-swap');
+
+  // Show the modal when the button is clicked
+  swapBtn.onclick = function() {
+      modal.style.display = "block";
+  }
+
+  // Close the modal when the close button is clicked
+  closeBtn.onclick = function() {
+      modal.style.display = "none";
+  }
+
+  // Close the modal when clicking outside of it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  }
+
+  // Confirm swap functionality
+  confirmSwapBtn.onclick = function() {
+      const ragamamaDate = document.getElementById('ragamama-date').value;
+      const madhuDate = document.getElementById('madhu-date').value;
+
+      if (ragamamaDate === "" || madhuDate === "") {
+          alert("Please select both dates.");
+          return;
+      }
+
+      // Log the swap
+      const logDiv = document.getElementById('log');
+      const swapEntry = document.createElement('p');
+      swapEntry.textContent = `Swapped Ragamama date ${ragamamaDate} with Madhu's date ${madhuDate}.`;
+      logDiv.appendChild(swapEntry);
+
+      // Simulate email notification
+      alert(`Email sent to Ragamama: Swapped ${ragamamaDate} with ${madhuDate}`);
+
+      // Close the modal
+      modal.style.display = "none";
+  }
+</script>
 </html>
