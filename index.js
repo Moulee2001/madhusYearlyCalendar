@@ -1291,18 +1291,34 @@ async function fetchRagamamaDates() {
     var ragamamaDropdown = document.getElementById('ragamama-date');
     ragamamaDropdown.innerHTML = ''; // Clear existing options
 
+    // Add default "Select Date" option and set it as selected
+    var defaultOption = document.createElement('option');
+    defaultOption.value = "";
+    defaultOption.textContent = "Select Date";
+    defaultOption.selected = true; // Set as default selected
+    ragamamaDropdown.appendChild(defaultOption);
+
     var recordArr = response.data;
-    recordArr.forEach(function(record) {
-        var option = document.createElement('option');
-        option.value = record.Date_of_Booking; // Assuming 'Date' is the field name
-        option.textContent = record.Date_of_Booking;
-        ragamamaDropdown.appendChild(option);
-    });
+    if (recordArr && recordArr.length > 0) {
+        recordArr.forEach(function(record) {
+            var option = document.createElement('option');
+            option.value = record.Date_of_Booking; // Assuming 'Date' is the field name
+            option.textContent = record.Date_of_Booking;
+            ragamamaDropdown.appendChild(option);
+        });
+        ragamamaDropdown.disabled = false; // Enable the dropdown if options are added
+        ragamamaDropdown.title = ""; // Clear tooltip
+    } else {
+        ragamamaDropdown.disabled = true; // Disable if no options are available
+        ragamamaDropdown.title = "No dates available"; // Set tooltip for disabled state
+    }
   } catch (error) {
-    console.error('Error fetching Ragamama dates' );
-    // alert('Failed to fetch Ragamama dates. Please try again later.');
+    console.error('Error fetching Ragamama dates');
+    document.getElementById('ragamama-date').disabled = true; // Disable on error
+    document.getElementById('ragamama-date').title = "Failed to fetch dates"; // Set tooltip on error
   }
 }
+
 // Fetch Madhu's dates
 async function fetchMadhuDates() {
   try {
@@ -1319,17 +1335,151 @@ async function fetchMadhuDates() {
     var madhuDropdown = document.getElementById('madhu-date');
     madhuDropdown.innerHTML = ''; // Clear existing options
 
+    // Add default "Select Date" option and set it as selected
+    var defaultOption = document.createElement('option');
+    defaultOption.value = "";
+    defaultOption.textContent = "Select Date";
+    defaultOption.selected = true; // Set as default selected
+    madhuDropdown.appendChild(defaultOption);
+
     var recordArr = response.data;
-    // console.log("recordArr",recordArr)
-    recordArr.forEach(function(record) {
-        var option = document.createElement('option');
-        option.value = record.Date_of_Booking; // Assuming 'Date' is the field name
-        option.textContent = record.Date_of_Booking;
-        madhuDropdown.appendChild(option);
-    });
+    if (recordArr && recordArr.length > 0) {
+        recordArr.forEach(function(record) {
+            var option = document.createElement('option');
+            option.value = record.Date_of_Booking; // Assuming 'Date' is the field name
+            option.textContent = record.Date_of_Booking;
+            madhuDropdown.appendChild(option);
+        });
+        madhuDropdown.disabled = false; // Enable the dropdown if options are added
+        madhuDropdown.title = ""; // Clear tooltip
+    } else {
+        madhuDropdown.disabled = true; // Disable if no options are available
+        madhuDropdown.title = "No dates available"; // Set tooltip for disabled state
+    }
   } catch (error) {
     console.error('Error fetching Madhu dates');
-    // alert('Failed to fetch Madhu dates. Please try again later.');
+    document.getElementById('madhu-date').disabled = true; // Disable on error
+    document.getElementById('madhu-date').title = "Failed to fetch dates"; // Set tooltip on error
   }
 }
+
+
+
+
+$('#confirm-swap').on('click', async function(event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  const ragamamaDate = $('#ragamama-date').val();
+  const madhuDate = $('#madhu-date').val();
+
+  // Check if both dates are selected
+  if (!ragamamaDate || !madhuDate) {
+      Swal.fire({
+          title: 'Error!',
+          text: 'Please select both dates before confirming the swap.',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2500
+      });
+      return;
+  }
+
+  const ragamamaCriteria = `Date_of_Booking == "${ragamamaDate}" && Booking_Status == 196576000000012035`;
+  const madhuCriteria = `Date_of_Booking == "${madhuDate}" && Booking_Status == 196576000000012039`;
+
+  // Fetch record ID for Ragamama
+  const ragamamaConfig = {
+      appName: "bookings",
+      reportName: "Booking_Report",
+      criteria: ragamamaCriteria,
+      page: 1,
+      pageSize: 10 // Adjust as necessary
+  };
+
+  const ragamamaResponse = await ZOHO.CREATOR.API.getAllRecords(ragamamaConfig);
+  const ragamamaId = ragamamaResponse.data.length > 0 ? ragamamaResponse.data[0].ID : null;
+
+  // Fetch record ID for Madhu
+  const madhuConfig = {
+      appName: "bookings",
+      reportName: "Booking_Report",
+      criteria: madhuCriteria,
+      page: 1,
+      pageSize: 10 // Adjust as necessary
+  };
+
+  const madhuResponse = await ZOHO.CREATOR.API.getAllRecords(madhuConfig);
+  const madhuId = madhuResponse.data.length > 0 ? madhuResponse.data[0].ID : null;
+
+  if (!ragamamaId || !madhuId) {
+      Swal.fire({
+          title: 'Error!',
+          text: 'Could not find records for the selected dates.',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2500
+      });
+      return;
+  }
+
+  // Update Ragamama's booking status
+  const formDataR = {
+      "data": {
+          "Booking_Status": "196576000000012039"
+      }
+  };
+
+  const configR = {
+      appName: "bookings",
+      reportName: "Booking_Report",
+      id: ragamamaId,
+      data: formDataR
+  };
+
+  const updateRResponse = await ZOHO.CREATOR.API.updateRecord(configR);
+  if (updateRResponse.code === 3000) {
+      console.log("Ragamama record updated successfully");
+  }
+
+  // Update Madhu's booking status
+  const formDataM = {
+      "data": {
+          "Booking_Status": "196576000000012035"
+      }
+  };
+
+  const configM = {
+      appName: "bookings",
+      reportName: "Booking_Report",
+      id: madhuId,
+      data: formDataM
+  };
+
+  const updateMResponse = await ZOHO.CREATOR.API.updateRecord(configM);
+  if (updateMResponse.code === 3000) {
+      console.log("Madhu record updated successfully");
+  }
+
+  // Show success alert
+  Swal.fire({
+      title: 'Success!',
+      text: 'The booking swap has been confirmed.',
+      icon: 'success',
+      showConfirmButton: false,
+      timer: 2500
+  });
+});
+
+
+ 
+
+
+
+
+
+
+
+
+
+
 
