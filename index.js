@@ -1366,109 +1366,103 @@ async function fetchMadhuDates() {
 
 
 
-$('#confirm-swap').on('click', async function(event) {
-  event.preventDefault(); // Prevent the default form submission
+$(document).ready(function() {
+  let isLoading = false;
 
-  const ragamamaDate = $('#ragamama-date').val();
-  const madhuDate = $('#madhu-date').val();
+  $('#confirm-swap').on('click', async function(event) {
+      event.preventDefault();
 
-  // Check if both dates are selected
-  if (!ragamamaDate || !madhuDate) {
+      if (isLoading) return; // Prevent multiple clicks while loading
+      isLoading = true;
+
+      // Show loading indicator
       Swal.fire({
-          title: 'Error!',
-          text: 'Please select both dates before confirming the swap.',
-          icon: 'error',
+          title: 'Processing...',
+          text: 'Please wait.',
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          onBeforeOpen: () => {
+              Swal.showLoading();
+          }
+      });
+
+      const ragamamaDate = $('#ragamama-date').val();
+      const madhuDate = $('#madhu-date').val();
+
+      if (!ragamamaDate || !madhuDate) {
+          Swal.fire({
+              title: 'Error!',
+              text: 'Please select both dates before confirming the swap.',
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 2500
+          });
+          isLoading = false;
+          return;
+      }
+
+      const ragamamaCriteria = `Date_of_Booking == "${ragamamaDate}" && Booking_Status == 196576000000012035`;
+      const madhuCriteria = `Date_of_Booking == "${madhuDate}" && Booking_Status == 196576000000012039`;
+
+      const ragamamaConfig = { appName: "bookings", reportName: "Booking_Report", criteria: ragamamaCriteria, page: 1, pageSize: 10 };
+      const ragamamaResponse = await ZOHO.CREATOR.API.getAllRecords(ragamamaConfig);
+      const ragamamaId = ragamamaResponse.data.length > 0 ? ragamamaResponse.data[0].ID : null;
+
+      const madhuConfig = { appName: "bookings", reportName: "Booking_Report", criteria: madhuCriteria, page: 1, pageSize: 10 };
+      const madhuResponse = await ZOHO.CREATOR.API.getAllRecords(madhuConfig);
+      const madhuId = madhuResponse.data.length > 0 ? madhuResponse.data[0].ID : null;
+
+      if (!ragamamaId || !madhuId) {
+          Swal.fire({
+              title: 'Error!',
+              text: 'Could not find records for the selected dates.',
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 2500
+          });
+          isLoading = false;
+          return;
+      }
+
+      const formDataR = { "data": { "Booking_Status": "196576000000012039" } };
+      const configR = { appName: "bookings", reportName: "Booking_Report", id: ragamamaId, data: formDataR };
+
+      await ZOHO.CREATOR.API.updateRecord(configR);
+
+      const formDataM = { "data": { "Booking_Status": "196576000000012035" } };
+      const configM = { appName: "bookings", reportName: "Booking_Report", id: madhuId, data: formDataM };
+
+      await ZOHO.CREATOR.API.updateRecord(configM);
+
+      Swal.fire({
+          title: 'Success!',
+          text: 'The booking swap has been confirmed.',
+          icon: 'success',
           showConfirmButton: false,
           timer: 2500
       });
-      return;
-  }
 
-  const ragamamaCriteria = `Date_of_Booking == "${ragamamaDate}" && Booking_Status == 196576000000012035`;
-  const madhuCriteria = `Date_of_Booking == "${madhuDate}" && Booking_Status == 196576000000012039`;
+      isLoading = false; // Reset loading state
+      $('#myModal').modal('hide');
 
-  // Fetch record ID for Ragamama
-  const ragamamaConfig = {
-      appName: "bookings",
-      reportName: "Booking_Report",
-      criteria: ragamamaCriteria,
-      page: 1,
-      pageSize: 10 // Adjust as necessary
-  };
+      fetchRecordsFunc("").then(ReturnVal => {
+        // FinalBookinglist = [];
+        FinalBookinglist.length = 0;
+        // console.log("ReturnVal New:", ReturnVal);
 
-  const ragamamaResponse = await ZOHO.CREATOR.API.getAllRecords(ragamamaConfig);
-  const ragamamaId = ragamamaResponse.data.length > 0 ? ragamamaResponse.data[0].ID : null;
+        FinalBookinglist = ReturnVal;
+        var selectedYearval = parseInt($("#year-select option:selected").val());
+        var statusrecord = $("#filter-dropdown option:selected").val();
+        // console.log("statusrecord:", statusrecord)
+        if (statusrecord == 0) {
+          statusrecord = null;
+        }
 
-  // Fetch record ID for Madhu
-  const madhuConfig = {
-      appName: "bookings",
-      reportName: "Booking_Report",
-      criteria: madhuCriteria,
-      page: 1,
-      pageSize: 10 // Adjust as necessary
-  };
-
-  const madhuResponse = await ZOHO.CREATOR.API.getAllRecords(madhuConfig);
-  const madhuId = madhuResponse.data.length > 0 ? madhuResponse.data[0].ID : null;
-
-  if (!ragamamaId || !madhuId) {
-      Swal.fire({
-          title: 'Error!',
-          text: 'Could not find records for the selected dates.',
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 2500
+        createCalendar(selectedYearval, statusrecord);
       });
-      return;
-  }
-
-  // Update Ragamama's booking status
-  const formDataR = {
-      "data": {
-          "Booking_Status": "196576000000012039"
-      }
-  };
-
-  const configR = {
-      appName: "bookings",
-      reportName: "Booking_Report",
-      id: ragamamaId,
-      data: formDataR
-  };
-
-  const updateRResponse = await ZOHO.CREATOR.API.updateRecord(configR);
-  if (updateRResponse.code === 3000) {
-      console.log("Ragamama record updated successfully");
-  }
-
-  // Update Madhu's booking status
-  const formDataM = {
-      "data": {
-          "Booking_Status": "196576000000012035"
-      }
-  };
-
-  const configM = {
-      appName: "bookings",
-      reportName: "Booking_Report",
-      id: madhuId,
-      data: formDataM
-  };
-
-  const updateMResponse = await ZOHO.CREATOR.API.updateRecord(configM);
-  if (updateMResponse.code === 3000) {
-      console.log("Madhu record updated successfully");
-  }
-
-  // Show success alert
-  Swal.fire({
-      title: 'Success!',
-      text: 'The booking swap has been confirmed.',
-      icon: 'success',
-      showConfirmButton: false,
-      timer: 2500
   });
 });
+
 
 
  
