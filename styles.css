@@ -692,26 +692,28 @@ label {
 }
 
 .swap-button {
-    padding: 6px 12px; /* Reduced padding for a smaller button */
-    background-color: #28a745; /* Fresh green color */
+    padding: 8px 16px; /* Slightly larger padding for a more balanced button */
+    background-color: #FF6F61; /* Vibrant coral color */
     color: #fff; /* White text */
     border: none; /* No border */
-    border-radius: 10px; /* Rounded corners for a modern look */
+    border-radius: 12px; /* More rounded corners for a softer look */
     cursor: pointer; /* Pointer cursor on hover */
-    font-size: 12px; /* Smaller font size */
+    font-size: 14px; /* Slightly larger font size */
     font-weight: 600; /* Semi-bold text */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-    transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s; /* Smooth transitions */
 }
 
 .swap-button:hover {
-    background-color: #218838; /* Darker shade on hover */
-    transform: translateY(-1px); /* Slight lift effect on hover */
+    background-color: #FF5B47; /* Darker coral shade on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
 }
 
 .swap-button:active {
-    background-color: #1e7e34; /* Even darker shade when active */
+    background-color: #FF4C3B; /* Even darker shade when active */
     transform: translateY(0); /* Reset lift effect */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Reset shadow */
 }
 
 
