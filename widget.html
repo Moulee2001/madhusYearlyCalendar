@@ -125,10 +125,39 @@
       font-size: 0.5rem;
       color: #fff;
     }
+    .modal-content-swapdate{
+      background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 
-    .modal-content {
+    }
+    .modal-content-swapdate {
       margin-top: -25px !important;
     }
+    
+    .modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 110%;
+    max-width: 520px;
+    position: relative;
+    z-index: 1041 !important;
+    transform: translateY(0%);
+    
+  }
+  .modal-backdrop{
+    z-index: 0;
+  }
 
     @media (min-height: 400px) and (max-height: 600px) {
       table tr {
@@ -257,7 +286,7 @@
 <body>
 <!-- The Modal -->
 <div id="myModal" class="modal">
-  <div class="modal-content">
+  <div class="modal-content-swapdate">
       <span class="close" onclick="closeModal()">&times;</span>
       
       <h2 class="modal-title">Confirm Booking Swap</h2>
@@ -302,14 +331,16 @@
     </span>
     <span class="filter-container">
       <label for="status-select">Booking Status</label>
-      <select class="filter-status-select" id="filter-dropdown" style="width: 200px;">
+      <!-- <select class="filter-status-select" id="filter-dropdown" style="width: 200px;">
         <option value="0" selected>All Status</option>
+      </select> -->
+      <select id="filter-dropdown" class="js-states form-control filter-status-select" multiple style="width: 200px;">
+        <!-- <option value="0">All Status</option> -->
       </select>
     </span>
     <button class="swap-button" id="swap-btn">SWAP DATE</button>
-    <span>
+    <span></span>
 
-    </span>
   </div>
   <div class="table-div">
     <table id="multiSelectTable">
@@ -532,11 +563,16 @@
   <script src="index.js"></script>
 </body>
 <script>
+
+  $("#multiplecarer").select2({
+    placeholder: "Select Status",
+    // allowClear: true,
+    closeOnSelect: true,
+    dropdownAutoWidth: true
+  });
   let bulkSelectEnabled = false;
   const selectedDates = [];
-      // Initialize local variables to store IDs
-      let ragamamaId = null;
-      let madhuId = null;
+
   // Listener for bulk select checkbox
   document.getElementById('bulk-select').addEventListener('change', function (event) {
     bulkSelectEnabled = event.target.checked;
@@ -558,6 +594,13 @@
     updateScreenSize();
   });
 
+  // Initialize Select2 on the sales opportunity dropdown
+  $('.filter-status-select').select2({
+    placeholder: 'Select',
+    allowClear: false
+  });
+  
+
 </script>
 <script>
   // Get modal element
@@ -575,6 +618,7 @@
   closeBtn.onclick = function() {
       modal.style.display = "none";
   }
+
 
   // Close the modal when clicking outside of it
   window.onclick = function(event) {
